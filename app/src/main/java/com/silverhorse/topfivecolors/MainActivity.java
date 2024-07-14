@@ -19,6 +19,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.silverhorse.topfivecolors.databinding.ActivityMainBinding;
 import com.silverhorse.topfivecolors.ui.camera.CameraFragment;
+import com.silverhorse.topfivecolors.ui.fivecolors.InfoColorsFragment;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new CameraFragment())
+                .replace(R.id.fragment_camera, new CameraFragment())
+                .replace(R.id.fragment_info_colors, new InfoColorsFragment())
                 .commit();
 
 
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        CameraFragment fragment = (CameraFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        CameraFragment fragment = (CameraFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_camera);
         if (fragment != null) {
             fragment.getCameraHelper().onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
