@@ -43,19 +43,12 @@ public class CameraFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(CameraViewModel.class);
 
         previewView = view.findViewById(R.id.previewView);
-////        colorsTextView = view.findViewById(R.id.colorsTextView);
-//
-//
-//
         cameraHelper = new CameraHelper(requireContext(), previewView, mViewModel);
-//
-        mViewModel.getDominantColors().observe(getViewLifecycleOwner(), this::displayColors);
-//
+//        mViewModel.getDominantColors().observe(getViewLifecycleOwner(), this::displayColors);
         cameraHelper.startCamera(this);
     }
 
     private void displayColors(List<RGBColor> colorModels) {
-
         for (RGBColor color : colorModels) {
             Log.d("TAG", ">>>>>>>" + color.RGBString());
         }
