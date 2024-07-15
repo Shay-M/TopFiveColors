@@ -1,8 +1,6 @@
 package com.silverhorse.topfivecolors.ui.camera;
 
 import android.graphics.Bitmap;
-import android.service.controls.ControlsProviderService;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -21,7 +19,6 @@ public class CameraViewModel extends ViewModel {
     }
 
     public void processImage(final Bitmap bitmap) {
-        Log.d(ControlsProviderService.TAG, "processImage: ");
         final List<RGBColor> colors = ImageUtils.getDominantColors(bitmap);
         dominantColors.postValue(colors);
     }

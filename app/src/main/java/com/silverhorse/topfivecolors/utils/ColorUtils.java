@@ -13,13 +13,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class ColorUtils {
-    /**
-     * Returns a list of the top X dominant colors as RGBColor objects from the given Bitmap.
-     *
-     * @param bitmap         The Bitmap from which to extract dominant colors.
-     * @param numberOfColors The number of dominant colors to retrieve.
-     * @return A list of the top X dominant colors as RGBColor objects.
-     */
+
     public static List<RGBColor> getDominantColors(final Bitmap bitmap, final int numberOfColors) {
         if (bitmap == null || bitmap.getWidth() == 0 || bitmap.getHeight() == 0) {
             return Collections.emptyList(); // Return an empty list
@@ -57,8 +51,125 @@ public class ColorUtils {
 
         return dominantColors;
     }
-}
 
+
+    public static List<RGBColor> getRandomColors(int numberOfColors) {
+        List<RGBColor> randomColors = new ArrayList<>();
+        Random random = new Random();
+
+        for (int i = 0; i < numberOfColors; i++) {
+            int red = random.nextInt(256);
+            int green = random.nextInt(256);
+            int blue = random.nextInt(256);
+            int color = android.graphics.Color.rgb(red, green, blue); // Convert RGB to color integer
+            RGBColor rgbColor = new RGBColor(color);
+            randomColors.add(rgbColor);
+        }
+
+        return randomColors;
+    }
+
+
+    public static List<RGBColor> getDominantColors2(Bitmap bitmap, int numberOfColors) {
+        if (bitmap == null) {
+            return Collections.emptyList();
+        }
+
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int pixelCount = width * height;
+        int[] pixels = new int[pixelCount];
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+
+        // Initialize K-means with random centroids
+        List<Integer> centroids = initializeCentroids(numberOfColors);
+
+        boolean centroidsChanged;
+        do {
+            List<List<Integer>> clusters = new ArrayList<>();
+            for (int i = 0; i < numberOfColors; i++) {
+                clusters.add(new ArrayList<>());
+            }
+
+            // Assign pixels to clusters
+            for (int pixel : pixels) {
+                int closestCentroidIndex = findClosestCentroid(pixel, centroids);
+                clusters.get(closestCentroidIndex).add(pixel);
+            }
+
+            // Calculate new centroids and check if they have changed
+            centroidsChanged = false;
+            for (int i = 0; i < numberOfColors; i++) {
+                if (!clusters.get(i).isEmpty()) {
+                    int newCentroid = calculateMean(clusters.get(i));
+                    if (newCentroid != centroids.get(i)) {
+                        centroids.set(i, newCentroid);
+                        centroidsChanged = true;
+                    }
+                }
+            }
+        } while (centroidsChanged);
+
+        // Convert centroids to RGBColor objects and return them
+        List<RGBColor> dominantColors = new ArrayList<>();
+        for (int centroid : centroids) {
+            dominantColors.add(new RGBColor(centroid));
+        }
+
+        return dominantColors;
+    }
+
+    private static List<Integer> initializeCentroids(int numberOfColors) {
+        List<Integer> centroids = new ArrayList<>();
+        for (int i = 0; i < numberOfColors; i++) {
+            centroids.add(Color.rgb((int) (Math.random() * 256),
+                    (int) (Math.random() * 256),
+                    (int) (Math.random() * 256)));
+        }
+        return centroids;
+    }
+
+    private static int findClosestCentroid(int pixel, List<Integer> centroids) {
+        int minDistance = Integer.MAX_VALUE;
+        int closestCentroidIndex = 0;
+        for (int i = 0; i < centroids.size(); i++) {
+            int distance = calculateDistance(pixel, centroids.get(i));
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestCentroidIndex = i;
+            }
+        }
+        return closestCentroidIndex;
+    }
+
+    private static int calculateDistance(int color1, int color2) {
+        int red1 = Color.red(color1);
+        int green1 = Color.green(color1);
+        int blue1 = Color.blue(color1);
+        int red2 = Color.red(color2);
+        int green2 = Color.green(color2);
+        int blue2 = Color.blue(color2);
+        return (red1 - red2) * (red1 - red2) + (green1 - green2) * (green1 - green2) + (blue1 - blue2) * (blue1 - blue2);
+    }
+
+    private static int calculateMean(List<Integer> cluster) {
+        if (cluster.isEmpty()) {
+            return 0;
+        }
+        int sumRed = 0;
+        int sumGreen = 0;
+        int sumBlue = 0;
+        for (int pixel : cluster) {
+            sumRed += Color.red(pixel);
+            sumGreen += Color.green(pixel);
+            sumBlue += Color.blue(pixel);
+        }
+        int meanRed = sumRed / cluster.size();
+        int meanGreen = sumGreen / cluster.size();
+        int meanBlue = sumBlue / cluster.size();
+        return Color.rgb(meanRed, meanGreen, meanBlue);
+    }
+}
 
 
 
