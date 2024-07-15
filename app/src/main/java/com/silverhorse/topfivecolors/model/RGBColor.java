@@ -3,44 +3,36 @@ package com.silverhorse.topfivecolors.model;
 import java.util.Objects;
 
 public class RGBColor {
-    private int red;
-    private int green;
-    private int blue;
+    private int color;
 
-    public RGBColor(final int red, final int green, final int blue) {
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
+    public RGBColor(final int color) {
+        this.color = color;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(final int color) {
+        this.color = color;
     }
 
     public int getRed() {
-        return red;
-    }
-
-    public void setRed(final int red) {
-        this.red = red;
+        return (color >> 16) & 0xFF;
     }
 
     public int getGreen() {
-        return green;
-    }
-
-    public void setGreen(final int green) {
-        this.green = green;
+        return (color >> 8) & 0xFF;
     }
 
     public int getBlue() {
-        return blue;
-    }
-
-    public void setBlue(final int blue) {
-        this.blue = blue;
+        return color & 0xFF;
     }
 
     public String RGBString() {
-        return "R:" + red +
-                " G:" + green +
-                " B:" + blue;
+        return "R:" + getRed() +
+                " G:" + getGreen() +
+                " B:" + getBlue();
     }
 
     @Override
@@ -48,14 +40,11 @@ public class RGBColor {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RGBColor rgbColor = (RGBColor) o;
-        return red == rgbColor.red &&
-                green == rgbColor.green &&
-                blue == rgbColor.blue;
+        return color == rgbColor.color;
     }
 
-    // Override hashCode() method to match equals()
     @Override
     public int hashCode() {
-        return Objects.hash(red, green, blue);
+        return Objects.hash(color);
     }
 }

@@ -9,13 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.silverhorse.topfivecolors.R;
 import com.silverhorse.topfivecolors.model.RGBColor;
+import com.silverhorse.topfivecolors.ui.shared.SharedViewModel;
 import com.silverhorse.topfivecolors.utils.CameraHelper;
 
 import java.util.List;
@@ -23,8 +23,9 @@ import java.util.List;
 public class CameraFragment extends Fragment {
 
     private CameraViewModel mViewModel;
-    private CameraHelper cameraHelper;
+    private CameraHelper mCameraHelper;
     private PreviewView previewView;
+    private SharedViewModel mSharedViewModel;
 //    private TextView colorsTextView;
 
     public static CameraFragment newInstance() {
@@ -41,33 +42,28 @@ public class CameraFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(CameraViewModel.class);
+        mSharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         previewView = view.findViewById(R.id.previewView);
-        cameraHelper = new CameraHelper(requireContext(), previewView, mViewModel);
-//        mViewModel.getDominantColors().observe(getViewLifecycleOwner(), this::displayColors);
-        cameraHelper.startCamera(this);
+        mCameraHelper = new CameraHelper(requireContext(), previewView, mViewModel);
+        mViewModel.getDominantColors().observe(getViewLifecycleOwner(), this::displayColors);
+        mCameraHelper.startCamera(this);
     }
 
     private void displayColors(List<RGBColor> colorModels) {
-        for (RGBColor color : colorModels) {
-            Log.d("TAG", ">>>>>>>" + color.RGBString());
-        }
-//        StringBuilder colors = new StringBuilder("Dominant Colors:\n");
-//        for (RGBColor color : colorModels) {
-//            colors.append(String.format("#%06X", (0xFFFFFF & color.getRgb()))).append("\n");
-//        }
-//        colorsTextView.setText(colors.toString());
+        mSharedViewModel.setDominantColors(colorModels);
+
     }
 
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        cameraHelper.shutdown();
+        mCameraHelper.shutdown();
     }
 
     public CameraHelper getCameraHelper() {
-        return cameraHelper;
+        return mCameraHelper;
     }
 
 }

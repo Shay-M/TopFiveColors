@@ -2,7 +2,6 @@ package com.silverhorse.topfivecolors.ui.fivecolors;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +14,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.silverhorse.topfivecolors.R;
+import com.silverhorse.topfivecolors.model.RGBColor;
+import com.silverhorse.topfivecolors.ui.shared.SharedViewModel;
+
+import java.util.List;
 
 public class InfoColorsFragment extends Fragment {
 
@@ -22,7 +25,11 @@ public class InfoColorsFragment extends Fragment {
         return new InfoColorsFragment();
     }
 
-    private InfoColorsViewModel mViewModel;
+    private InfoColorsViewModel mInfoColorsViewModel;
+    private SharedViewModel mSharedViewModel;
+
+    private TextView textView1, textView2, textView3, textView4, textView5;
+    private View colorBox1, colorBox2, colorBox3, colorBox4, colorBox5;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -34,43 +41,50 @@ public class InfoColorsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(InfoColorsViewModel.class);
+        mInfoColorsViewModel = new ViewModelProvider(this).get(InfoColorsViewModel.class);
+        mSharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
-        TextView textView1 = view.findViewById(R.id.textView1);
-        View colorBox1 = view.findViewById(R.id.colorBox1);
-        TextView textView2 = view.findViewById(R.id.textView2);
-        View colorBox2 = view.findViewById(R.id.colorBox2);
-        TextView textView3 = view.findViewById(R.id.textView3);
-        View colorBox3 = view.findViewById(R.id.colorBox3);
-        TextView textView4 = view.findViewById(R.id.textView4);
-        View colorBox4 = view.findViewById(R.id.colorBox4);
-        TextView textView5 = view.findViewById(R.id.textView5);
-        View colorBox5 = view.findViewById(R.id.colorBox5);
+        textView1 = view.findViewById(R.id.textView1);
+        colorBox1 = view.findViewById(R.id.colorBox1);
+        textView2 = view.findViewById(R.id.textView2);
+        colorBox2 = view.findViewById(R.id.colorBox2);
+        textView3 = view.findViewById(R.id.textView3);
+        colorBox3 = view.findViewById(R.id.colorBox3);
+        textView4 = view.findViewById(R.id.textView4);
+        colorBox4 = view.findViewById(R.id.colorBox4);
+        textView5 = view.findViewById(R.id.textView5);
+        colorBox5 = view.findViewById(R.id.colorBox5);
 
-        mViewModel.getColor1().observe(getViewLifecycleOwner(), colorBox1::setBackgroundColor);
-        mViewModel.getColor2().observe(getViewLifecycleOwner(), colorBox2::setBackgroundColor);
-        mViewModel.getColor3().observe(getViewLifecycleOwner(), colorBox3::setBackgroundColor);
-        mViewModel.getColor4().observe(getViewLifecycleOwner(), colorBox4::setBackgroundColor);
-        mViewModel.getColor5().observe(getViewLifecycleOwner(), colorBox5::setBackgroundColor);
+        // Observe sharedViewModel to get color updates
+        mSharedViewModel.getDominantColors().observe(getViewLifecycleOwner(), this::updateColors);
 
-        mViewModel.getText1().observe(getViewLifecycleOwner(), textView1::setText);
-        mViewModel.getText2().observe(getViewLifecycleOwner(), textView2::setText);
-        mViewModel.getText3().observe(getViewLifecycleOwner(), textView3::setText);
-        mViewModel.getText4().observe(getViewLifecycleOwner(), textView4::setText);
-        mViewModel.getText5().observe(getViewLifecycleOwner(), textView5::setText);
+        // Observe local ViewModel to update UI
+        mInfoColorsViewModel.getColor1().observe(getViewLifecycleOwner(), color -> colorBox1.setBackgroundColor(color));
+        mInfoColorsViewModel.getColor2().observe(getViewLifecycleOwner(), color -> colorBox2.setBackgroundColor(color));
+        mInfoColorsViewModel.getColor3().observe(getViewLifecycleOwner(), color -> colorBox3.setBackgroundColor(color));
+        mInfoColorsViewModel.getColor4().observe(getViewLifecycleOwner(), color -> colorBox4.setBackgroundColor(color));
+        mInfoColorsViewModel.getColor5().observe(getViewLifecycleOwner(), color -> colorBox5.setBackgroundColor(color));
 
-        mViewModel.setColor1(Color.RED);
-        mViewModel.setColor2(Color.GREEN);
-        mViewModel.setColor3(Color.BLUE);
-        mViewModel.setColor4(Color.YELLOW);
-        mViewModel.setColor5(Color.MAGENTA);
-
-        mViewModel.setText1("Text View 1");
-        mViewModel.setText2("Text View 2");
-        mViewModel.setText3("Text View 3");
-        mViewModel.setText4("Text View 4");
-        mViewModel.setText5("Text View 5");
-
+        mInfoColorsViewModel.getText1().observe(getViewLifecycleOwner(), textView1::setText);
+        mInfoColorsViewModel.getText2().observe(getViewLifecycleOwner(), textView2::setText);
+        mInfoColorsViewModel.getText3().observe(getViewLifecycleOwner(), textView3::setText);
+        mInfoColorsViewModel.getText4().observe(getViewLifecycleOwner(), textView4::setText);
+        mInfoColorsViewModel.getText5().observe(getViewLifecycleOwner(), textView5::setText);
     }
 
+    private void updateColors(List<RGBColor> colors) {
+//        if (colors == null || colors.size() < 5) return;
+
+        mInfoColorsViewModel.setColor1(colors.get(0).getColor());
+        mInfoColorsViewModel.setColor2(colors.get(1).getColor());
+        mInfoColorsViewModel.setColor3(colors.get(2).getColor());
+        mInfoColorsViewModel.setColor4(colors.get(3).getColor());
+        mInfoColorsViewModel.setColor5(colors.get(4).getColor());
+
+        mInfoColorsViewModel.setText1(colors.get(0).RGBString());
+        mInfoColorsViewModel.setText2(colors.get(1).RGBString());
+        mInfoColorsViewModel.setText3(colors.get(2).RGBString());
+        mInfoColorsViewModel.setText4(colors.get(3).RGBString());
+        mInfoColorsViewModel.setText5(colors.get(4).RGBString());
+    }
 }
