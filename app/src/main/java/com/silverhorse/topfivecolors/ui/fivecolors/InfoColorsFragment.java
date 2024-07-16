@@ -14,9 +14,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.silverhorse.topfivecolors.R;
-import com.silverhorse.topfivecolors.model.RGBColor;
+import com.silverhorse.topfivecolors.model.ColorPercentage;
 import com.silverhorse.topfivecolors.ui.shared.SharedViewModel;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class InfoColorsFragment extends Fragment {
@@ -29,7 +30,7 @@ public class InfoColorsFragment extends Fragment {
     private SharedViewModel mSharedViewModel;
 
     private TextView textView1, textView2, textView3, textView4, textView5;
-    private View colorBox1, colorBox2, colorBox3, colorBox4, colorBox5;
+    private TextView colorBox1, colorBox2, colorBox3, colorBox4, colorBox5;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -37,23 +38,22 @@ public class InfoColorsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_info_colors, container, false);
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mInfoColorsViewModel = new ViewModelProvider(this).get(InfoColorsViewModel.class);
         mSharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
-        textView1 = view.findViewById(R.id.textView1);
-        colorBox1 = view.findViewById(R.id.colorBox1);
-        textView2 = view.findViewById(R.id.textView2);
-        colorBox2 = view.findViewById(R.id.colorBox2);
-        textView3 = view.findViewById(R.id.textView3);
-        colorBox3 = view.findViewById(R.id.colorBox3);
-        textView4 = view.findViewById(R.id.textView4);
-        colorBox4 = view.findViewById(R.id.colorBox4);
-        textView5 = view.findViewById(R.id.textView5);
-        colorBox5 = view.findViewById(R.id.colorBox5);
+        textView1 = view.findViewById(R.id.rgbTextView1);
+        colorBox1 = view.findViewById(R.id.colorTextView1);
+        textView2 = view.findViewById(R.id.rgbTextView2);
+        colorBox2 = view.findViewById(R.id.colorTextView2);
+        textView3 = view.findViewById(R.id.rgbTextView3);
+        colorBox3 = view.findViewById(R.id.colorTextView3);
+        textView4 = view.findViewById(R.id.rgbTextView4);
+        colorBox4 = view.findViewById(R.id.colorTextView4);
+        textView5 = view.findViewById(R.id.rgbTextView5);
+        colorBox5 = view.findViewById(R.id.colorTextView5);
 
         // Observe sharedViewModel to get color updates
         mSharedViewModel.getDominantColors().observe(getViewLifecycleOwner(), this::updateColors);
@@ -65,26 +65,64 @@ public class InfoColorsFragment extends Fragment {
         mInfoColorsViewModel.getColor4().observe(getViewLifecycleOwner(), color -> colorBox4.setBackgroundColor(color));
         mInfoColorsViewModel.getColor5().observe(getViewLifecycleOwner(), color -> colorBox5.setBackgroundColor(color));
 
+        final DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        mInfoColorsViewModel.getPercentage1().observe(getViewLifecycleOwner(), percentage -> {
+            String formattedPercentage = decimalFormat.format(percentage) + "%";
+
+            colorBox1.setText(formattedPercentage);
+        });
+
+        mInfoColorsViewModel.getPercentage2().observe(getViewLifecycleOwner(), percentage -> {
+            String formattedPercentage = decimalFormat.format(percentage) + "%";
+            colorBox2.setText(formattedPercentage);
+        });
+
+        mInfoColorsViewModel.getPercentage3().observe(getViewLifecycleOwner(), percentage -> {
+            String formattedPercentage = decimalFormat.format(percentage) + "%";
+            colorBox3.setText(formattedPercentage);
+        });
+
+        mInfoColorsViewModel.getPercentage4().observe(getViewLifecycleOwner(), percentage -> {
+            String formattedPercentage = decimalFormat.format(percentage) + "%";
+            colorBox4.setText(formattedPercentage);
+        });
+
+        mInfoColorsViewModel.getPercentage5().observe(getViewLifecycleOwner(), percentage -> {
+            String formattedPercentage = decimalFormat.format(percentage) + "%";
+            colorBox5.setText(formattedPercentage);
+        });
+
         mInfoColorsViewModel.getText1().observe(getViewLifecycleOwner(), textView1::setText);
         mInfoColorsViewModel.getText2().observe(getViewLifecycleOwner(), textView2::setText);
         mInfoColorsViewModel.getText3().observe(getViewLifecycleOwner(), textView3::setText);
         mInfoColorsViewModel.getText4().observe(getViewLifecycleOwner(), textView4::setText);
         mInfoColorsViewModel.getText5().observe(getViewLifecycleOwner(), textView5::setText);
+
     }
 
-    private void updateColors(List<RGBColor> colors) {
-//        if (colors == null || colors.size() < 5) return;
+    private void updateColors(final List<ColorPercentage> colors) {
+        mInfoColorsViewModel.setColor1(colors.get(0).color());
+        mInfoColorsViewModel.setColor2(colors.get(1).color());
+        mInfoColorsViewModel.setColor3(colors.get(2).color());
+        mInfoColorsViewModel.setColor4(colors.get(3).color());
+        mInfoColorsViewModel.setColor5(colors.get(4).color());
 
-        mInfoColorsViewModel.setColor1(colors.get(0).getColor());
-        mInfoColorsViewModel.setColor2(colors.get(1).getColor());
-        mInfoColorsViewModel.setColor3(colors.get(2).getColor());
-        mInfoColorsViewModel.setColor4(colors.get(3).getColor());
-        mInfoColorsViewModel.setColor5(colors.get(4).getColor());
+        mInfoColorsViewModel.setText1(RGBString(colors.get(0).color()));
+        mInfoColorsViewModel.setText2(RGBString(colors.get(1).color()));
+        mInfoColorsViewModel.setText3(RGBString(colors.get(2).color()));
+        mInfoColorsViewModel.setText4(RGBString(colors.get(3).color()));
+        mInfoColorsViewModel.setText5(RGBString(colors.get(4).color()));
 
-        mInfoColorsViewModel.setText1(colors.get(0).RGBString());
-        mInfoColorsViewModel.setText2(colors.get(1).RGBString());
-        mInfoColorsViewModel.setText3(colors.get(2).RGBString());
-        mInfoColorsViewModel.setText4(colors.get(3).RGBString());
-        mInfoColorsViewModel.setText5(colors.get(4).RGBString());
+        mInfoColorsViewModel.setPercentage1(colors.get(0).percentage());
+        mInfoColorsViewModel.setPercentage2(colors.get(1).percentage());
+        mInfoColorsViewModel.setPercentage3(colors.get(2).percentage());
+        mInfoColorsViewModel.setPercentage4(colors.get(3).percentage());
+        mInfoColorsViewModel.setPercentage5(colors.get(4).percentage());
+    }
+
+    public String RGBString(final int color) {
+        return "R:" + ((color >> 16) & 0xFF) +
+                " G:" + ((color >> 8) & 0xFF) +
+                " B:" + (color & 0xFF);
     }
 }

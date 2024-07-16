@@ -46,7 +46,7 @@ public class ColorUtils {
 
         for (int i = 0; i < numberOfColors && i < sortedColors.size(); ++i) {
             int color = sortedColors.get(i).getKey();
-            dominantColors.add(new RGBColor(color));
+            dominantColors.add(new RGBColor(color,1));
         }
 
         return dominantColors;
@@ -62,14 +62,14 @@ public class ColorUtils {
             int green = random.nextInt(256);
             int blue = random.nextInt(256);
             int color = android.graphics.Color.rgb(red, green, blue); // Convert RGB to color integer
-            RGBColor rgbColor = new RGBColor(color);
+            RGBColor rgbColor = new RGBColor(color , 1);
             randomColors.add(rgbColor);
         }
 
         return randomColors;
     }
 
-
+/*
     public static List<RGBColor> getDominantColors2(Bitmap bitmap, int numberOfColors) {
         if (bitmap == null) {
             return Collections.emptyList();
@@ -168,7 +168,7 @@ public class ColorUtils {
         int meanGreen = sumGreen / cluster.size();
         int meanBlue = sumBlue / cluster.size();
         return Color.rgb(meanRed, meanGreen, meanBlue);
-    }
+    }*/
 }
 
 

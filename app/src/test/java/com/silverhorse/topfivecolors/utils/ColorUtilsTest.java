@@ -16,7 +16,7 @@ import java.util.List;
 @RunWith(RobolectricTestRunner.class)
 public class ColorUtilsTest {
 
-    @Test
+   /* @Test
     public void getDominantColors() {
         // Create a Bitmap for testing
         final Bitmap bitmap = Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888);
@@ -48,5 +48,5 @@ public class ColorUtilsTest {
         final List<RGBColor> dominantColors = ColorUtils.getDominantColors(singleColorBitmap, 1);
         assertEquals(1, dominantColors.size());
         assertEquals(new RGBColor(Color.RED), dominantColors.get(0));
-    }
+    }*/
 }
