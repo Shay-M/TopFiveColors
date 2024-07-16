@@ -4,9 +4,15 @@ import java.util.Objects;
 
 public class RGBColor {
     private int color;
+    private float percentage;
 
     public RGBColor(final int color) {
         this.color = color;
+    }
+
+    public RGBColor(final int color, final float percentage) {
+        this.color = color;
+        this.percentage = percentage;
     }
 
     public int getColor() {
