@@ -15,107 +15,9 @@ public class ImageUtils {
     }
 }*//*
  */
-/*
 
+// -------------------------------------------normal--------------------------------------------
 
-
-package com.silverhorse.topfivecolors.utils;
-
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.util.Log;
-
-import com.silverhorse.topfivecolors.model.RGBColor;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-public class ImageUtils {
-    private static final String TAG = "ImageUtils";
-
-    public static List<RGBColor> getDominantColors(final Bitmap bitmap) {
-        if (bitmap == null) {
-            Log.d(TAG, "Bitmap is null");
-            return Collections.emptyList();
-        }
-
-        final int width = bitmap.getWidth();
-        final int height = bitmap.getHeight();
-        final int quarterWidth = width / 2;
-        final int quarterHeight = height / 2;
-
-        // Create thread pool
-        final ExecutorService executor = Executors.newFixedThreadPool(4);
-        final List<Future<Map<Integer, Integer>>> futures = new ArrayList<>();
-
-        // Divide the image into 4 parts and submit tasks for each part
-        futures.add(executor.submit(() -> countColors(bitmap, 0, 0, quarterWidth, quarterHeight)));
-        futures.add(executor.submit(() -> countColors(bitmap, quarterWidth, 0, width, quarterHeight)));
-        futures.add(executor.submit(() -> countColors(bitmap, 0, quarterHeight, quarterWidth, height)));
-        futures.add(executor.submit(() -> countColors(bitmap, quarterWidth, quarterHeight, width, height)));
-
-
-        // Combine color counts from all futures
-        final Map<Integer, Integer> colorCountMap = new HashMap<>();
-        for (Future<Map<Integer, Integer>> future : futures) {
-            try {
-                combineColorCounts(colorCountMap, future.get());
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
-
-        executor.shutdown();
-
-        // Convert color counts to RGBColor objects
-        final List<RGBColor> dominantColors = extractDominantColors(colorCountMap, 5);
-
-        return dominantColors;
-    }
-
-    private static void combineColorCounts(final Map<Integer, Integer> mainMap, final Map<Integer, Integer> partialMap) {
-        for (Map.Entry<Integer, Integer> entry : partialMap.entrySet()) {
-            mainMap.merge(entry.getKey(), entry.getValue(), Integer::sum);
-        }
-    }
-
-    private static List<RGBColor> extractDominantColors(Map<Integer, Integer> colorCountMap, int numberOfColors) {
-        List<Map.Entry<Integer, Integer>> sortedColors = new ArrayList<>(colorCountMap.entrySet());
-        sortedColors.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
-
-        List<RGBColor> dominantColors = new ArrayList<>();
-        for (int i = 0; i < numberOfColors && i < sortedColors.size(); i++) {
-            int color = sortedColors.get(i).getKey();
-            dominantColors.add(new RGBColor(color));
-        }
-
-        return dominantColors;
-    }
-
-    private static Map<Integer, Integer> countColors(final Bitmap bitmap, final int startX, final int startY, final int endX, final int endY) {
-        Map<Integer, Integer> colorCountMap = new HashMap<>();
-        for (int y = startY; y < endY; ++y) {
-            for (int x = startX; x < endX; ++x) {
-                final int pixel = bitmap.getPixel(x, y);
-                final int color = Color.rgb(Color.red(pixel), Color.green(pixel), Color.blue(pixel));
-                colorCountMap.merge(color, 1, Integer::sum);
-            }
-        }
-
-        return colorCountMap;
-    }
-}
-
-*/
-/*
 package com.silverhorse.topfivecolors.utils;
 
 import android.graphics.Bitmap;
@@ -126,9 +28,9 @@ import com.silverhorse.topfivecolors.model.ColorPercentage;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -155,14 +57,16 @@ public class ImageUtils {
         final ExecutorService executor = Executors.newFixedThreadPool(4);
         final List<Future<Map<Integer, Integer>>> futures = new ArrayList<>();
 
+        final int bucketSize = 64;
+
         // Divide the image into 4 parts and submit tasks for each part
-        futures.add(executor.submit(() -> countColors(resizedBitmap, 0, 0, quarterWidth, quarterHeight)));
-        futures.add(executor.submit(() -> countColors(resizedBitmap, quarterWidth, 0, width, quarterHeight)));
-        futures.add(executor.submit(() -> countColors(resizedBitmap, 0, quarterHeight, quarterWidth, height)));
-        futures.add(executor.submit(() -> countColors(resizedBitmap, quarterWidth, quarterHeight, width, height)));
+        futures.add(executor.submit(() -> countColors(resizedBitmap, 0, 0, quarterWidth, quarterHeight, bucketSize)));
+        futures.add(executor.submit(() -> countColors(resizedBitmap, quarterWidth, 0, width, quarterHeight, bucketSize)));
+        futures.add(executor.submit(() -> countColors(resizedBitmap, 0, quarterHeight, quarterWidth, height, bucketSize)));
+        futures.add(executor.submit(() -> countColors(resizedBitmap, quarterWidth, quarterHeight, width, height, bucketSize)));
 
         // Combine color counts from all futures
-        final Map<Integer, Integer> colorCountMap = new HashMap<>();
+        final Map<Integer, Integer> colorCountMap = new ConcurrentHashMap<>();
         for (Future<Map<Integer, Integer>> future : futures) {
             try {
                 combineColorCounts(colorCountMap, future.get());
@@ -185,11 +89,11 @@ public class ImageUtils {
         }
     }
 
-    private static List<ColorPercentage> extractDominantColors(Map<Integer, Integer> colorCountMap, int numberOfColors, int totalPixels) {
-        List<Map.Entry<Integer, Integer>> sortedColors = new ArrayList<>(colorCountMap.entrySet());
+    private static List<ColorPercentage> extractDominantColors(final Map<Integer, Integer> colorCountMap, final int numberOfColors, final int totalPixels) {
+        final List<Map.Entry<Integer, Integer>> sortedColors = new ArrayList<>(colorCountMap.entrySet());
         sortedColors.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
 
-        List<ColorPercentage> dominantColors = new ArrayList<>();
+        final List<ColorPercentage> dominantColors = new ArrayList<>();
         for (int i = 0; i < numberOfColors && i < sortedColors.size(); ++i) {
             int color = sortedColors.get(i).getKey();
             int count = sortedColors.get(i).getValue();
@@ -200,21 +104,35 @@ public class ImageUtils {
         return dominantColors;
     }
 
-    private static Map<Integer, Integer> countColors(final Bitmap bitmap, final int startX, final int startY, final int endX, final int endY) {
-        Map<Integer, Integer> colorCountMap = new HashMap<>();
+    private static Map<Integer, Integer> countColors(final Bitmap bitmap, final int startX, final int startY, final int endX, final int endY, final int bucketSize) {
+        Map<Integer, Integer> colorCountMap = new ConcurrentHashMap<>();
         for (int y = startY; y < endY; ++y) {
             for (int x = startX; x < endX; ++x) {
                 final int pixel = bitmap.getPixel(x, y);
-                final int color = Color.rgb(Color.red(pixel), Color.green(pixel), Color.blue(pixel));
-                colorCountMap.merge(color, 1, Integer::sum);
+                final int bucketedColor = getBucketedColor(pixel, bucketSize);
+                colorCountMap.merge(bucketedColor, 1, Integer::sum);
             }
         }
 
         return colorCountMap;
     }
-}*/
 
-package com.silverhorse.topfivecolors.utils;
+    private static int roundToNearestBucket(int value, int bucketSize) {
+        return (value / bucketSize) * bucketSize;
+    }
+
+    private static int getBucketedColor(int color, int bucketSize) {
+        int r = roundToNearestBucket(Color.red(color), bucketSize);
+        int g = roundToNearestBucket(Color.green(color), bucketSize);
+        int b = roundToNearestBucket(Color.blue(color), bucketSize);
+        return Color.rgb(r, g, b);
+    }
+}
+
+
+// -----------------------------------------KMeans-------------------------------------------------
+
+/*package com.silverhorse.topfivecolors.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -237,12 +155,15 @@ public class ImageUtils {
             return Collections.emptyList();
         }
 
-        final int width = bitmap.getWidth();
-        final int height = bitmap.getHeight();
+        // Reduce the size of the bitmap to speed up the process
+        final Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 4, bitmap.getHeight() / 4, false);
+
+        final int width = resizedBitmap.getWidth();
+        final int height = resizedBitmap.getHeight();
 
         // Extract pixels from the bitmap
         int[] pixels = new int[width * height];
-        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+        resizedBitmap.getPixels(pixels, 0, width, 0, 0, width, height);
 
         // Convert pixel colors to float arrays
         List<float[]> pixelList = new ArrayList<>();
@@ -324,7 +245,7 @@ public class ImageUtils {
     }
 
     private static List<ColorPercentage> calculateColorPercentages(List<float[]> centroids, int[] pixels) {
-        Map<Integer, Integer> colorCounts = new HashMap<>();
+        final Map<Integer, Integer> colorCounts = new HashMap<>();
         for (int color : pixels) {
             float[] colorArray = new float[]{Color.red(color), Color.green(color), Color.blue(color)};
             int closestCentroid = getClosestCentroid(colorArray, centroids);
@@ -343,4 +264,138 @@ public class ImageUtils {
 
         return colorPercentages;
     }
+}*/
+
+// ----------------------------------------KMeans split file----------------------------------------------------
+
+/*
+package com.silverhorse.topfivecolors.utils;
+
+import android.graphics.Bitmap;
+import android.util.Log;
+
+import com.silverhorse.topfivecolors.model.ColorPercentage;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+public class ImageUtils {
+    private static final String TAG = "ImageUtils";
+
+    public static List<ColorPercentage> getDominantColors(final Bitmap bitmap) {
+        if (bitmap == null) {
+            Log.d(TAG, "Bitmap is null");
+            return Collections.emptyList();
+        }
+
+        // Reduce the size of the bitmap to speed up the process
+        final Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 4, bitmap.getHeight() / 4, false);
+
+        final int width = resizedBitmap.getWidth();
+        final int height = resizedBitmap.getHeight();
+        final int quarterWidth = width / 2;
+        final int quarterHeight = height / 2;
+
+
+        // Create thread pool
+        final ExecutorService executor = Executors.newFixedThreadPool(4);
+        final List<Future<List<ColorPercentage>>> futures = new ArrayList<>();
+
+        // Divide the image into 4 parts and submit tasks for each part
+        futures.add(executor.submit(() -> PixelExtractor.extractPixels(resizedBitmap, 0, 0, quarterWidth, quarterHeight)));
+        futures.add(executor.submit(() -> PixelExtractor.extractPixels(resizedBitmap, quarterWidth, 0, width, quarterHeight)));
+        futures.add(executor.submit(() -> PixelExtractor.extractPixels(resizedBitmap, 0, quarterHeight, quarterWidth, height)));
+        futures.add(executor.submit(() -> PixelExtractor.extractPixels(resizedBitmap, quarterWidth, quarterHeight, width, height)));
+
+        // Combine pixel data from all futures
+        final List<ColorPercentage> allPixels = new CopyOnWriteArrayList<>()
+        for (Future<List<ColorPercentage>> future : futures) {
+            try {
+                allPixels.addAll(future.get());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        executor.shutdown();
+
+        return allPixels;
+    }
 }
+*/
+
+
+/*
+
+package com.silverhorse.topfivecolors.utils;
+
+import android.graphics.Bitmap;
+import android.util.Log;
+
+import com.silverhorse.topfivecolors.model.ColorPercentage;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+public class ImageUtils {
+    private static final String TAG = "ImageUtils";
+
+    public static List<ColorPercentage> getDominantColors(final Bitmap bitmap) {
+        if (bitmap == null) {
+            Log.d(TAG, "Bitmap is null");
+            return Collections.emptyList();
+        }
+
+        // Reduce the size of the bitmap to speed up the process
+        final Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 4, bitmap.getHeight() / 4, false);
+
+        final int width = resizedBitmap.getWidth();
+        final int height = resizedBitmap.getHeight();
+        final int quarterWidth = width / 2;
+        final int quarterHeight = height / 2;
+
+        // Create thread pool
+        final ExecutorService executor = Executors.newFixedThreadPool(4);
+        final List<Future<List<float[]>>> futures = new ArrayList<>();
+
+        // Divide the image into 4 parts and submit tasks for each part
+        futures.add(executor.submit(() -> PixelExtractor.extractPixels(resizedBitmap, 0, 0, quarterWidth, quarterHeight)));
+        futures.add(executor.submit(() -> PixelExtractor.extractPixels(resizedBitmap, quarterWidth, 0, width, quarterHeight)));
+        futures.add(executor.submit(() -> PixelExtractor.extractPixels(resizedBitmap, 0, quarterHeight, quarterWidth, height)));
+        futures.add(executor.submit(() -> PixelExtractor.extractPixels(resizedBitmap, quarterWidth, quarterHeight, width, height)));
+
+        // Combine pixel data from all futures
+        final List<float[]> allPixels = new ArrayList<>();
+        for (Future<List<float[]>> future : futures) {
+            try {
+                allPixels.addAll(future.get());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        executor.shutdown();
+
+        // Perform K-means clustering on the combined pixel data
+        final List<float[]> centroids = KMeansCluster.kMeans(allPixels, 5, 10);
+
+        // Extract pixels from the bitmap
+        int[] pixels = new int[width * height];
+        resizedBitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+
+        // Calculate color percentages
+        return KMeansCluster.calculateColorPercentages(centroids, pixels);
+    }
+}*/
+
+
+

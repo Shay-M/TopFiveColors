@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.silverhorse.topfivecolors.ui.fivecolors.InfoColorsViewModel" />
@@ -15,7 +16,7 @@
         android:padding="16dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
             android:text="@string/title"
@@ -24,7 +25,7 @@
 
         <TextView
             android:id="@+id/rgbTextView1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{viewModel.text1}"
             android:textAlignment="center"
@@ -32,7 +33,7 @@
 
         <TextView
             android:id="@+id/colorTextView1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@{viewModel.color1}"
             android:padding="5dp"
@@ -43,7 +44,7 @@
 
         <TextView
             android:id="@+id/rgbTextView2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{viewModel.text2}"
             android:textAlignment="center"
@@ -51,7 +52,7 @@
 
         <TextView
             android:id="@+id/colorTextView2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@{viewModel.color2}"
             android:padding="5dp"
@@ -62,7 +63,7 @@
 
         <TextView
             android:id="@+id/rgbTextView3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{viewModel.text3}"
             android:textAlignment="center"
@@ -70,7 +71,7 @@
 
         <TextView
             android:id="@+id/colorTextView3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@{viewModel.color3}"
             android:padding="5dp"
@@ -81,7 +82,7 @@
 
         <TextView
             android:id="@+id/rgbTextView4"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{viewModel.text4}"
             android:textAlignment="center"
@@ -89,7 +90,7 @@
 
         <TextView
             android:id="@+id/colorTextView4"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@{viewModel.color4}"
             android:padding="5dp"
@@ -100,7 +101,7 @@
 
         <TextView
             android:id="@+id/rgbTextView5"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{viewModel.text5}"
             android:textAlignment="center"
@@ -108,7 +109,7 @@
 
         <TextView
             android:id="@+id/colorTextView5"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@{viewModel.color5}"
             android:padding="5dp"

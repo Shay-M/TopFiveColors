@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 
 import com.silverhorse.topfivecolors.R;
 import com.silverhorse.topfivecolors.model.ColorPercentage;
-import com.silverhorse.topfivecolors.model.RGBColor;
 import com.silverhorse.topfivecolors.ui.shared.SharedViewModel;
 import com.silverhorse.topfivecolors.utils.CameraHelper;
 

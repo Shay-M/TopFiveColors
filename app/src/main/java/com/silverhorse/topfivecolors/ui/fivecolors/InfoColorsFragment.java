@@ -68,7 +68,6 @@ public class InfoColorsFragment extends Fragment {
         final DecimalFormat decimalFormat = new DecimalFormat("0.00");
         mInfoColorsViewModel.getPercentage1().observe(getViewLifecycleOwner(), percentage -> {
             String formattedPercentage = decimalFormat.format(percentage) + "%";
-
             colorBox1.setText(formattedPercentage);
         });
 
@@ -91,13 +90,11 @@ public class InfoColorsFragment extends Fragment {
             String formattedPercentage = decimalFormat.format(percentage) + "%";
             colorBox5.setText(formattedPercentage);
         });
-
         mInfoColorsViewModel.getText1().observe(getViewLifecycleOwner(), textView1::setText);
         mInfoColorsViewModel.getText2().observe(getViewLifecycleOwner(), textView2::setText);
         mInfoColorsViewModel.getText3().observe(getViewLifecycleOwner(), textView3::setText);
         mInfoColorsViewModel.getText4().observe(getViewLifecycleOwner(), textView4::setText);
         mInfoColorsViewModel.getText5().observe(getViewLifecycleOwner(), textView5::setText);
-
     }
 
     private void updateColors(final List<ColorPercentage> colors) {

@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.silverhorse.topfivecolors.model.ColorPercentage;
-import com.silverhorse.topfivecolors.model.RGBColor;
 
 import java.util.List;
 

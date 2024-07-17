@@ -3,9 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ic_launcher_background"
     android:fitsSystemWindows="true"
+    android:padding="5dp"
     tools:context=".MainActivity">
-
 
     <!--    <FrameLayout-->
     <!--        android:id="@+id/fragment_container"-->
@@ -18,15 +19,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.3"
+        android:clickable="false"
+        android:padding="5dp"
         tools:layout="@layout/fragment_camera" />
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_info_colors"
-        android:name="com.silverhorse.topfivecolors.ui.fivecolors.InfoColorsFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        tools:layout="@layout/fragment_info_colors" />
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment_info_colors"
+            android:name="com.silverhorse.topfivecolors.ui.fivecolors.InfoColorsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="false"
+            tools:layout="@layout/fragment_info_colors" />
 
 
 </LinearLayout>

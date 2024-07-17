@@ -235,6 +235,6 @@ public class InfoColorsViewModel extends ViewModel {
     public void setTextColor5(int color) {
         textColor5.setValue(color);
     }
-    
+
 
 }
