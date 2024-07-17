@@ -1,5 +1,5 @@
-<!-- fragment_info_colors.xml -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -27,7 +27,7 @@
             android:id="@+id/rgbTextView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.text1}"
+            android:text="@{viewModel.color1Text}"
             android:textAlignment="center"
             tools:text="Color 1 RGB" />
 
@@ -37,16 +37,15 @@
             android:layout_height="wrap_content"
             android:background="@{viewModel.color1}"
             android:padding="5dp"
-            android:text="@{viewModel.color1Text}"
+            android:percentageText="@{viewModel.getPercentage1()}"
             android:textAlignment="center"
-            android:textColor="@{viewModel.textColor1}"
             tools:text="Color 1" />
 
         <TextView
             android:id="@+id/rgbTextView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.text2}"
+            android:text="@{viewModel.color2Text}"
             android:textAlignment="center"
             tools:text="Color 2 RGB" />
 
@@ -56,16 +55,15 @@
             android:layout_height="wrap_content"
             android:background="@{viewModel.color2}"
             android:padding="5dp"
-            android:text="@{viewModel.color2Text}"
+            android:percentageText="@{viewModel.getPercentage2()}"
             android:textAlignment="center"
-            android:textColor="@{viewModel.textColor2}"
             tools:text="Color 2" />
 
         <TextView
             android:id="@+id/rgbTextView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.text3}"
+            android:text="@{viewModel.color3Text}"
             android:textAlignment="center"
             tools:text="Color 3 RGB" />
 
@@ -75,16 +73,15 @@
             android:layout_height="wrap_content"
             android:background="@{viewModel.color3}"
             android:padding="5dp"
-            android:text="@{viewModel.color3Text}"
+            android:percentageText="@{viewModel.getPercentage3()}"
             android:textAlignment="center"
-            android:textColor="@{viewModel.textColor3}"
             tools:text="Color 3" />
 
         <TextView
             android:id="@+id/rgbTextView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.text4}"
+            android:text="@{viewModel.color4Text}"
             android:textAlignment="center"
             tools:text="Color 4 RGB" />
 
@@ -94,16 +91,15 @@
             android:layout_height="wrap_content"
             android:background="@{viewModel.color4}"
             android:padding="5dp"
-            android:text="@{viewModel.color4Text}"
+            android:percentageText="@{viewModel.getPercentage4()}"
             android:textAlignment="center"
-            android:textColor="@{viewModel.textColor4}"
             tools:text="Color 4" />
 
         <TextView
             android:id="@+id/rgbTextView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.text5}"
+            android:text="@{viewModel.color5Text}"
             android:textAlignment="center"
             tools:text="Color 5 RGB" />
 
@@ -113,9 +109,8 @@
             android:layout_height="wrap_content"
             android:background="@{viewModel.color5}"
             android:padding="5dp"
-            android:text="@{viewModel.color5Text}"
+            android:percentageText="@{viewModel.getPercentage5()}"
             android:textAlignment="center"
-            android:textColor="@{viewModel.textColor5}"
             tools:text="Color 5" />
 
     </LinearLayout>

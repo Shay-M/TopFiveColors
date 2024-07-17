@@ -1,3 +1,4 @@
+/*
 package com.silverhorse.topfivecolors.ui.fivecolors;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -118,6 +119,74 @@ public class InfoColorsFragment extends Fragment {
     }
 
     public String RGBString(final int color) {
+        return "R:" + ((color >> 16) & 0xFF) +
+                " G:" + ((color >> 8) & 0xFF) +
+                " B:" + (color & 0xFF);
+    }
+}*/
+package com.silverhorse.topfivecolors.ui.fivecolors;
+
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.silverhorse.topfivecolors.R;
+import com.silverhorse.topfivecolors.databinding.FragmentInfoColorsBinding;
+import com.silverhorse.topfivecolors.model.ColorPercentage;
+import com.silverhorse.topfivecolors.ui.shared.SharedViewModel;
+
+import java.util.List;
+
+public class InfoColorsFragment extends Fragment {
+
+    public static InfoColorsFragment newInstance() {
+        return new InfoColorsFragment();
+    }
+
+    private InfoColorsViewModel mInfoColorsViewModel;
+    private SharedViewModel mSharedViewModel;
+    private FragmentInfoColorsBinding binding;
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_info_colors, container, false);
+        binding.setLifecycleOwner(this);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mInfoColorsViewModel = new ViewModelProvider(this).get(InfoColorsViewModel.class);
+        mSharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
+        binding.setViewModel(mInfoColorsViewModel);
+
+        // Observe sharedViewModel to get color updates
+        mSharedViewModel.getDominantColors().observe(getViewLifecycleOwner(), this::updateColors);
+    }
+
+    private void updateColors(final List<ColorPercentage> colors) {
+        if (colors != null && colors.size() >= 5) {
+            for (int i = 0; i < colors.size(); i++) {
+                mInfoColorsViewModel.setColor(i + 1, colors.get(i).color());
+                mInfoColorsViewModel.setPercentage(i + 1, colors.get(i).percentage());
+                mInfoColorsViewModel.setColorText(i + 1, RGBString(colors.get(i).color()));
+            }
+        }
+    }
+
+    // Utility method to format color into RGB string
+    private String RGBString(final int color) {
         return "R:" + ((color >> 16) & 0xFF) +
                 " G:" + ((color >> 8) & 0xFF) +
                 " B:" + (color & 0xFF);

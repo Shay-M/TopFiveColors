@@ -5,7 +5,6 @@ plugins {
 android {
     namespace 'com.silverhorse.topfivecolors'
     compileSdk 34
-
     testOptions.unitTests.includeAndroidResources = true
 
     defaultConfig {

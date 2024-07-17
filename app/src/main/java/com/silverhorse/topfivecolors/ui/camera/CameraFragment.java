@@ -26,7 +26,6 @@ public class CameraFragment extends Fragment {
     private CameraHelper mCameraHelper;
     private PreviewView previewView;
     private SharedViewModel mSharedViewModel;
-//    private TextView colorsTextView;
 
     public static CameraFragment newInstance() {
         return new CameraFragment();
