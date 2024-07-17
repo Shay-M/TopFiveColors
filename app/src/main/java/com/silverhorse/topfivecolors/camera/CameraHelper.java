@@ -1,4 +1,4 @@
-package com.silverhorse.topfivecolors.utils;
+package com.silverhorse.topfivecolors.camera;
 
 import android.Manifest;
 import android.app.Activity;
@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.util.Size;
 import android.widget.Toast;
 
