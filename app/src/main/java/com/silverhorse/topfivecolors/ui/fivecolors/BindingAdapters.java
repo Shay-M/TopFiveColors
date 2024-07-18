@@ -38,6 +38,8 @@ import android.widget.TextView;
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.LiveData;
 
+import java.text.DecimalFormat;
+
 public class BindingAdapters {
 
     @BindingAdapter("android:background")
@@ -67,8 +69,6 @@ public class BindingAdapters {
             float percentage = percentageLiveData.getValue();
             String formattedPercentage = String.format("%.2f%%", percentage);
             view.setText(formattedPercentage);
-
-
         }
     }*/
 
@@ -82,12 +82,13 @@ public class BindingAdapters {
         }
 
         if (percentage != null) {
-            String formattedPercentage = String.format("%.2f%%", percentage);
+            final DecimalFormat decimalFormat = new DecimalFormat("#.##%");
+            final String formattedPercentage = decimalFormat.format(percentage /100);
             view.setText(formattedPercentage);
         }
     }
 
-    private static boolean isColorDark(int color) {
+    private static boolean isColorDark(final int color) {
         double darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
         return darkness >= 0.5;
     }

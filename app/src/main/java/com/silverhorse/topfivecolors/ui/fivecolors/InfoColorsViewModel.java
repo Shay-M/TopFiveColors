@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class InfoColorsViewModel extends ViewModel {
 
@@ -36,19 +37,19 @@ public class InfoColorsViewModel extends ViewModel {
 
     public void setColor(int index, int color) {
         if (colorMap.containsKey(index)) {
-            colorMap.get(index).setValue(color);
+            Objects.requireNonNull(colorMap.get(index)).setValue(color);
         }
     }
 
     public void setPercentage(final int index, final float percentage) {
         if (percentageMap.containsKey(index)) {
-            percentageMap.get(index).setValue(percentage);
+            Objects.requireNonNull(percentageMap.get(index)).setValue(percentage);
         }
     }
 
     public void setColorText(final int index, final String text) {
         if (colorTextMap.containsKey(index)) {
-            colorTextMap.get(index).setValue(text);
+            Objects.requireNonNull(colorTextMap.get(index)).setValue(text);
         }
     }
 
