@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">TopFiveColors</string>
 
-    <string name="rgb">RGB</string>
     <string name="title">חלוקת צבעים</string>
 </resources>
