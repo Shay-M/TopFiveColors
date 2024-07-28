@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Random;
 
 public class CameraViewModel extends ViewModel {
-    private MutableLiveData<List<ColorPercentage>> dominantColors = new MutableLiveData<>();
+    private final MutableLiveData<List<ColorPercentage>> dominantColors = new MutableLiveData<>();
 
     public LiveData<List<ColorPercentage>> getDominantColors() {
         return dominantColors;

@@ -27,41 +27,49 @@ public class BitmapUtils {
      * @param bitmap the bitmap to process
      * @return a list of dominant colors with their percentages
      */
-    public static List<ColorPercentage> getDominantColors(final Bitmap bitmap) {
-        if (bitmap == null) {
-            Log.d(TAG, "Bitmap is null");
+
+
+    public static List<ColorPercentage> getDominantColors(final Bitmap bitmap, final int bucketSize) {
+
+        if (bitmap == null || bitmap.getWidth() <= 0 || bitmap.getHeight() <= 0) {
+            Log.d(TAG, "Bitmap is null or has invalid dimensions");
             return Collections.emptyList();
         }
-        // Reduce the size of the bitmap to speed up the process
-        final Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / SCALE_FACTOR, bitmap.getHeight() / SCALE_FACTOR, false);
+
+        final int scaledWidth = Math.max(5, bitmap.getWidth() / SCALE_FACTOR);
+        final int scaledHeight = Math.max(5, bitmap.getHeight() / SCALE_FACTOR);
+        final Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, false);
+        Log.d(TAG, "Bitmap resized to: " + scaledWidth + "x" + scaledHeight);
 
         final int width = resizedBitmap.getWidth();
         final int height = resizedBitmap.getHeight();
         final int quarterWidth = width / 2;
         final int quarterHeight = height / 2;
 
-        // Divide the image into 4 parts and submit tasks for each part
         final ExecutorService executor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
         final List<Future<Map<Integer, Integer>>> futures = new ArrayList<>();
-        futures.add(executor.submit(() -> countColors(resizedBitmap, 0, 0, quarterWidth, quarterHeight, BUCKET_SIZE)));
-        futures.add(executor.submit(() -> countColors(resizedBitmap, quarterWidth, 0, width, quarterHeight, BUCKET_SIZE)));
-        futures.add(executor.submit(() -> countColors(resizedBitmap, 0, quarterHeight, quarterWidth, height, BUCKET_SIZE)));
-        futures.add(executor.submit(() -> countColors(resizedBitmap, quarterWidth, quarterHeight, width, height, BUCKET_SIZE)));
+        futures.add(executor.submit(() -> countColors(resizedBitmap, 0, 0, quarterWidth, quarterHeight, bucketSize)));
+        futures.add(executor.submit(() -> countColors(resizedBitmap, quarterWidth, 0, width, quarterHeight, bucketSize)));
+        futures.add(executor.submit(() -> countColors(resizedBitmap, 0, quarterHeight, quarterWidth, height, bucketSize)));
+        futures.add(executor.submit(() -> countColors(resizedBitmap, quarterWidth, quarterHeight, width, height, bucketSize)));
 
-        // Combine color counts from all futures
         final Map<Integer, Integer> colorCountMap = new ConcurrentHashMap<>();
         for (Future<Map<Integer, Integer>> future : futures) {
             try {
                 combineColorCounts(colorCountMap, future.get());
             } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+                Log.e(TAG, "Error processing color counts", e);
             }
         }
 
         executor.shutdown();
 
-        // Extract dominant colors with percentages
         return extractDominantColors(colorCountMap, 5, width * height);
+
+    }
+
+    public static List<ColorPercentage> getDominantColors(final Bitmap bitmap) {
+        return getDominantColors(bitmap , BUCKET_SIZE);
     }
 
     private static void combineColorCounts(final Map<Integer, Integer> mainMap, final Map<Integer, Integer> partialMap) {
@@ -80,6 +88,7 @@ public class BitmapUtils {
             int count = sortedColors.get(i).getValue();
             float percentage = (count / (float) totalPixels) * 100;
             dominantColors.add(new ColorPercentage(color, percentage));
+            Log.d(TAG, String.format("Color: %d, Count: %d, Percentage: %.2f%%", color, count, percentage));
         }
 
         return dominantColors;
@@ -94,7 +103,6 @@ public class BitmapUtils {
                 colorCountMap.merge(bucketedColor, 1, Integer::sum);
             }
         }
-
         return colorCountMap;
     }
 }
