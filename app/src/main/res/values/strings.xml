@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">TopFiveColors</string>
 
-    <string name="title">חלוקת צבעים</string>
+    <string name="title">Color distribution</string>
 </resources>
