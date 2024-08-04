@@ -143,10 +143,12 @@ import com.silverhorse.topfivecolors.databinding.FragmentInfoColorsBinding;
 import com.silverhorse.topfivecolors.model.ColorPercentage;
 import com.silverhorse.topfivecolors.ui.shared.SharedViewModel;
 import com.silverhorse.topfivecolors.utils.ColorUtils;
+import com.silverhorse.topfivecolors.utils.Constants;
 
 import java.util.List;
 
 public class InfoColorsFragment extends Fragment {
+
 
     public static InfoColorsFragment newInstance() {
         return new InfoColorsFragment();
@@ -177,7 +179,7 @@ public class InfoColorsFragment extends Fragment {
     }
 
     private void updateColors(final List<ColorPercentage> colors) {
-        if (colors != null && colors.size() >= 5) {
+        if (colors != null && colors.size() >= Constants.NUMBER_OF_COLORS) {
             for (int i = 0; i < colors.size(); i++) {
                 mInfoColorsViewModel.setColor(i + 1, colors.get(i).color());
                 mInfoColorsViewModel.setPercentage(i + 1, colors.get(i).percentage());
@@ -185,5 +187,5 @@ public class InfoColorsFragment extends Fragment {
             }
         }
     }
-    
+
 }

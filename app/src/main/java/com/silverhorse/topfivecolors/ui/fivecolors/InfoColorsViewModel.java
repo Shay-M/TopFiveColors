@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.silverhorse.topfivecolors.utils.Constants;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -16,7 +18,7 @@ public class InfoColorsViewModel extends ViewModel {
 
 
     public InfoColorsViewModel() {
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= Constants.NUMBER_OF_COLORS; i++) {
             colorMap.put(i, new MutableLiveData<>());
             percentageMap.put(i, new MutableLiveData<>());
             colorTextMap.put(i, new MutableLiveData<>());
