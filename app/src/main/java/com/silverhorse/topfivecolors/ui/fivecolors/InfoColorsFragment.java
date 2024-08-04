@@ -180,7 +180,7 @@ public class InfoColorsFragment extends Fragment {
 
     private void updateColors(final List<ColorPercentage> colors) {
         if (colors != null && colors.size() >= Constants.NUMBER_OF_COLORS) {
-            for (int i = 0; i < colors.size(); i++) {
+            for (int i = 0; i < colors.size(); ++i) {
                 mInfoColorsViewModel.setColor(i + 1, colors.get(i).color());
                 mInfoColorsViewModel.setPercentage(i + 1, colors.get(i).percentage());
                 mInfoColorsViewModel.setColorText(i + 1, ColorUtils.RGBString(colors.get(i).color()));
