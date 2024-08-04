@@ -142,6 +142,7 @@ import com.silverhorse.topfivecolors.R;
 import com.silverhorse.topfivecolors.databinding.FragmentInfoColorsBinding;
 import com.silverhorse.topfivecolors.model.ColorPercentage;
 import com.silverhorse.topfivecolors.ui.shared.SharedViewModel;
+import com.silverhorse.topfivecolors.utils.ColorUtils;
 
 import java.util.List;
 
@@ -180,15 +181,9 @@ public class InfoColorsFragment extends Fragment {
             for (int i = 0; i < colors.size(); i++) {
                 mInfoColorsViewModel.setColor(i + 1, colors.get(i).color());
                 mInfoColorsViewModel.setPercentage(i + 1, colors.get(i).percentage());
-                mInfoColorsViewModel.setColorText(i + 1, RGBString(colors.get(i).color()));
+                mInfoColorsViewModel.setColorText(i + 1, ColorUtils.RGBString(colors.get(i).color()));
             }
         }
     }
-
-    // Utility method to format color into RGB string
-    private String RGBString(final int color) {
-        return "R:" + ((color >> 16) & 0xFF) +
-                " G:" + ((color >> 8) & 0xFF) +
-                " B:" + (color & 0xFF);
-    }
+    
 }
