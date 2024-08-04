@@ -25,21 +25,6 @@ public class CameraViewModel extends ViewModel {
         final List<ColorPercentage> colors = BitmapUtils.getDominantColors(bitmap);
         dominantColors.postValue(colors);
 
-//        final List<ColorPercentage> colors = generateRandomColors();
-//        dominantColors.postValue(colors);
-
     }
 
-    private List<ColorPercentage> generateRandomColors() {
-        List<ColorPercentage> colors = new ArrayList<>();
-        Random random = new Random();
-
-        for (int i = 0; i < 5; i++) {
-            int color = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
-            float percentage = random.nextFloat() * 100;
-            colors.add(new ColorPercentage(color, percentage));
-        }
-
-        return colors;
-    }
 }
