@@ -1,7 +1,6 @@
 package com.silverhorse.topfivecolors.ui.camera;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,9 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.silverhorse.topfivecolors.imageprocessing.BitmapUtils;
 import com.silverhorse.topfivecolors.model.ColorPercentage;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class CameraViewModel extends ViewModel {
     private final MutableLiveData<List<ColorPercentage>> dominantColors = new MutableLiveData<>();
@@ -30,7 +27,7 @@ public class CameraViewModel extends ViewModel {
 
     }
 
-    private List<ColorPercentage> generateRandomColors() {
+/*    private List<ColorPercentage> generateRandomColors() {
         List<ColorPercentage> colors = new ArrayList<>();
         Random random = new Random();
 
@@ -41,5 +38,5 @@ public class CameraViewModel extends ViewModel {
         }
 
         return colors;
-    }
+    }*/
 }

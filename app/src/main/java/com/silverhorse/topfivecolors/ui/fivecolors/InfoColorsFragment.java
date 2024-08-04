@@ -126,6 +126,7 @@ public class InfoColorsFragment extends Fragment {
 }*/
 package com.silverhorse.topfivecolors.ui.fivecolors;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -134,9 +135,11 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 
 import com.silverhorse.topfivecolors.R;
 import com.silverhorse.topfivecolors.databinding.FragmentInfoColorsBinding;
@@ -173,6 +176,15 @@ public class InfoColorsFragment extends Fragment {
 
         // Observe sharedViewModel to get color updates
         mSharedViewModel.getDominantColors().observe(getViewLifecycleOwner(), this::updateColors);
+
+        mInfoColorsViewModel.getColorBucketSize().observe(getViewLifecycleOwner(), this::updateBucketSize);
+
+
+    }
+
+    private void updateBucketSize(Integer integer) {
+        Log.d("TAG333", "updateBucketSize: "+ integer);
+//        mSharedViewModel.recalculateColors();
     }
 
     private void updateColors(final List<ColorPercentage> colors) {

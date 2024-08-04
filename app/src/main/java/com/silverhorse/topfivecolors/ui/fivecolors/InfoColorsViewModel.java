@@ -1,5 +1,9 @@
 package com.silverhorse.topfivecolors.ui.fivecolors;
 
+import android.graphics.Bitmap;
+import android.util.Log;
+import android.widget.SeekBar;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -13,6 +17,9 @@ public class InfoColorsViewModel extends ViewModel {
     private final Map<Integer, MutableLiveData<Integer>> colorMap = new HashMap<>();
     private final Map<Integer, MutableLiveData<Float>> percentageMap = new HashMap<>();
     private final Map<Integer, MutableLiveData<String>> colorTextMap = new HashMap<>();
+    private final MutableLiveData<Integer> colorBucketSize = new MutableLiveData<>(30);
+    private Bitmap currentBitmap;
+
 
 
     public InfoColorsViewModel() {
@@ -111,6 +118,24 @@ public class InfoColorsViewModel extends ViewModel {
 
     public LiveData<String> getColor5Text() {
         return colorTextMap.get(5);
+    }
+
+    public LiveData<Integer> getColorBucketSize() {
+        return colorBucketSize;
+    }
+
+    public void setColorBucketSize(int size) {
+        colorBucketSize.setValue(size);
+    }
+
+    public Bitmap getCurrentBitmap() {
+        return currentBitmap;
+    }
+
+    // https://stackoverflow.com/questions/31360484/can-i-databind-a-progressbar-in-android
+
+    public void onValueChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+        colorBucketSize.setValue(progresValue);
     }
 
 

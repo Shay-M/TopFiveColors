@@ -32,15 +32,21 @@ public class BindingAdapters {
 */
 package com.silverhorse.topfivecolors.ui.fivecolors;
 
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.util.Log;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
+import androidx.databinding.InverseBindingAdapter;
+import androidx.databinding.InverseBindingListener;
 import androidx.lifecycle.LiveData;
 
 import java.text.DecimalFormat;
 
 public class BindingAdapters {
+    private static final String ANDROID_PROGRESS = "android:progress";
 
     @BindingAdapter("android:background")
     public static void setBackgroundColor(TextView view, Integer color) {
@@ -63,15 +69,6 @@ public class BindingAdapters {
         }
     }
 
-/*    @BindingAdapter("android:percentageText")
-    public static void setPercentageText(TextView view, LiveData<Float> percentageLiveData) {
-        if (percentageLiveData != null && percentageLiveData.getValue() != null) {
-            float percentage = percentageLiveData.getValue();
-            String formattedPercentage = String.format("%.2f%%", percentage);
-            view.setText(formattedPercentage);
-        }
-    }*/
-
     @BindingAdapter({"android:background", "android:percentageText"})
     public static void setPercentageText(TextView view, Integer color, Float percentage) {
         if (color != null) {
@@ -83,7 +80,7 @@ public class BindingAdapters {
 
         if (percentage != null) {
             final DecimalFormat decimalFormat = new DecimalFormat("#.##%");
-            final String formattedPercentage = decimalFormat.format(percentage /100);
+            final String formattedPercentage = decimalFormat.format(percentage / 100);
             view.setText(formattedPercentage);
         }
     }
@@ -92,4 +89,64 @@ public class BindingAdapters {
         double darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
         return darkness >= 0.5;
     }
+/*
+    @BindingAdapter("progress")
+    public static void setProgress(final SeekBar seekBar, final int progress) {
+        if (seekBar.getProgress() != progress) {
+            seekBar.setProgress(progress);
+        }
+    }
+
+    @InverseBindingAdapter(attribute = "progress", event = "progressAttrChanged")
+    public static int getProgress(final SeekBar seekBar) {
+        return seekBar.getProgress();
+    }
+
+   @BindingAdapter(ANDROID_PROGRESS)
+    public static void setProgressAttrChanged(final SeekBar seekBar, final InverseBindingListener listener) {
+        if (listener != null) {
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(final SeekBar seekBar, final int progress, final boolean fromUser) {
+                    if (fromUser) {
+                        listener.onChange();
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    Log.d("TAG22", "onStartTrackingTouch: ");
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    Log.d("TAG22", "onStartTrackingTouch: ");
+                }
+            });
+
+        }
+    }*/
+
+    /*@BindingAdapter(ANDROID_PROGRESS)
+    public static void setSeekbarProgress(SeekBar seekBar, int progress) {
+        Log.d("TAG22", "setSeekbarProgress: 1");
+
+        try {
+            seekBar.setProgress(progress);
+        } catch (Resources.NotFoundException nfe) {
+            nfe.printStackTrace();
+        }
+    }
+
+    @InverseBindingAdapter(attribute = ANDROID_PROGRESS)
+    public static int getSeekbarProgress(SeekBar seekBar) {
+        Log.d("TAG22", "getSeekbarProgress: 2");
+
+        try {
+            return seekBar.getProgress();
+        } catch (Resources.NotFoundException nfe) {
+            nfe.printStackTrace();
+            return 0;
+        }
+    }*/
 }
