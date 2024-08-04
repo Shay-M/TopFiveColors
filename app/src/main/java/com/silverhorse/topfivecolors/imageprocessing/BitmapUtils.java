@@ -17,7 +17,7 @@ import java.util.concurrent.Future;
 
 public class BitmapUtils {
     private static final String TAG = "BitmapUtils";
-    private static final int BUCKET_SIZE = 32;
+    private static final int BUCKET_SIZE = 16;
     private static final int SCALE_FACTOR = 4;
     private static final int NUMBER_OF_THREADS = 4;
 
